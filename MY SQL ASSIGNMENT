@@ -1,0 +1,189 @@
+-- creation of database
+CREATE DATABASE LIBRARY;
+USE library;
+
+-- Creating table (Branch)
+CREATE TABLE BRANCH (
+branch_no INT PRIMARY KEY,
+manager_id TINYINT,
+Branch_Address VARCHAR(50),
+Contact_no VARCHAR(15)
+);
+
+-- Creating table (Employee)
+
+CREATE TABLE EMPLOYEE(
+EMP_ID INT PRIMARY KEY,
+EMP_NAME VARCHAR(30) NOT NULL,
+Position VARCHAR(15),
+SALARY INT,
+branch_no INT ,
+FOREIGN KEY (BRANCH_NO)
+REFERENCES  BRANCH(branch_no) ON
+DELETE CASCADE
+);
+
+-- Creating table (Customer)
+CREATE TABLE CUSTOMER(
+CUSTOMER_ID INT PRIMARY KEY,
+CUSTOMER_NAME VARCHAR(30),
+CUSTOMER_ADDRESS VARCHAR(50),
+REG_DATE DATE 
+);
+
+-- Creating table (IssueStatus)
+CREATE TABLE ISSUESTATUS(
+ISSUE_ID BIGINT PRIMARY KEY,
+ISSUED_CUS INT,
+ISSUED_BOOK_NAME VARCHAR(40),
+ISSUED_DATE DATE,
+ISBN_BOOK INT,
+FOREIGN KEY (ISSUED_CUS) REFERENCES CUSTOMER(CUSTOMER_ID)
+);
+
+-- creating table (returnstatus)
+CREATE TABLE RETURNSTATUS(
+RETURN_ID INT PRIMARY KEY,
+RETURN_CUST INT,
+RETURN_BOOK_NAME VARCHAR(50),
+RETURN_DATE DATE,
+ISBN_BOOK_2 INT
+);
+
+-- creating table(books)
+CREATE TABLE BOOKS(
+ISBN INT PRIMARY KEY,
+BOOK_TITLE VARCHAR(50),
+CATEGORY VARCHAR(50),
+RENTAL_PRICE DECIMAL(10,2),
+STATUS VARCHAR(3),
+AUTHOR VARCHAR(50),
+PUBLISHER VARCHAR(50)
+);
+
+ALTER TABLE ISSUESTATUS 
+ADD CONSTRAINT fk_ISBN_BOOK
+FOREIGN KEY (ISBN_BOOK)
+REFERENCES BOOKS(ISBN);
+
+ALTER TABLE RETURNSTATUS
+ADD CONSTRAINT fk_ISBN_BOOK_2
+FOREIGN KEY (ISBN_BOOK_2)
+REFERENCES BOOKS(ISBN);
+
+INSERT INTO branch (Branch_no, Manager_id, Branch_address, Contact_no)
+VALUES
+    (1, 101, '123 Main St', '555-1234'),
+    (2, 102, '456 Oak St', '555-5678'),
+    (3, 103, '789 Pine St', '555-9876'),
+    (4, 104, '321 Elm St', '555-4321'),
+    (5, 105, '555 Maple St', '555-8765'),
+    (6, 106, '876 Birch St', '555-2109'),
+    (7, 107, '234 Cedar St', '555-6789'),
+    (8, 108, '987 Walnut St', '555-3456'),
+    (9, 109, '543 Oak St', '555-8901'),
+    (10, 110, '678 Pine St', '555-6543');
+
+INSERT INTO employee (Emp_id, Emp_name, Position, Salary, Branch_no)
+VALUES
+    (201, 'John Doe', 'Manager', 60000.00, 1),
+    (202, 'Jane Smith', 'Clerk', 45000.00, 1),
+    (203, 'Bob Johnson', 'Clerk', 50000.00, 2),
+    (204, 'Mary White', 'Manager', 62000.00, 2),
+    (205, 'Sam Black', 'Clerk', 48000.00, 3),
+    (206, 'Emily Green', 'Clerk', 52000.00, 3),
+    (207, 'David Brown', 'Manager', 65000.00, 4),
+    (208, 'Sara Jones', 'Clerk', 47000.00, 4),
+    (209, 'Chris Davis', 'Manager', 70000.00, 5),
+    (210, 'Lisa Taylor', 'Clerk', 49000.00, 5);
+    
+INSERT INTO customer (Customer_id, Customer_name, Customer_address, Reg_date)
+VALUES
+    (301, 'Alice Brown', '789 Elm St', '2022-01-15'),
+    (302, 'Charlie Davis', '101 Pine St', '2021-12-10'),
+    (303, 'Eva Wilson', '543 Maple St', '2022-02-20'),
+    (304, 'Greg Miller', '876 Oak St', '2021-11-05'),
+    (305, 'Hannah Smith', '234 Cedar St', '2022-03-25'),
+    (306, 'Ian Johnson', '987 Birch St', '2022-04-12'),
+    (307, 'Jenny White', '321 Pine St', '2021-10-30'),
+    (308, 'Kevin Black', '555 Walnut St', '2022-05-18'),
+    (309, 'Laura Taylor', '876 Cedar St', '2021-09-15'),
+    (310, 'Mike Davis', '678 Birch St', '2022-06-10');
+    
+INSERT INTO books (Isbn, Book_title, Category, Rental_price, Status, Author, Publisher)
+VALUES
+    (101, 'The Great Gatsby', 'Fiction', 5.99, 'yes', 'F. Scott Fitzgerald', 'Scribner'),
+    (102, 'To Kill a Mockingbird', 'Fiction', 6.99, 'yes', 'Harper Lee', 'J.B. Lippincott'),
+    (103, '1984', 'Science Fiction', 7.99, 'yes', 'George Orwell', 'Penguin'),
+    (104, 'The Catcher in the Rye', 'Fiction', 8.99, 'yes', 'J.D. Salinger', 'Little, Brown'),
+    (105, 'Brave New World', 'Science Fiction', 9.99, 'yes', 'Aldous Huxley', 'Harper'),
+    (106, 'The Lord of the Rings', 'Fantasy', 10.99, 'yes', 'J.R.R. Tolkien', 'Allen & Unwin'),
+    (107, 'Pride and Prejudice', 'Classic', 11.99, 'yes', 'Jane Austen', 'Thomas Egerton'),
+    (108, 'The Hobbit', 'Fantasy', 12.99, 'yes', 'J.R.R. Tolkien', 'Allen & Unwin'),
+    (109, 'To the Lighthouse', 'Classic', 13.99, 'yes', 'Virginia Woolf', 'Hogarth Press'),
+    (110, 'Moby-Dick', 'Adventure', 14.99, 'yes', 'Herman Melville', 'Richard Bentley');
+    
+INSERT INTO issuestatus (Issue_id, Issued_cus, Issued_book_name, Issued_date, Isbn_book)
+VALUES
+    (401, 301, 'The Great Gatsby', '2022-02-01', 101),
+    (402, 302, 'To Kill a Mockingbird', '2022-01-20', 102),
+    (403, 303, '1984', '2022-03-10', 103),
+    (404, 304, 'The Catcher in the Rye', '2021-11-15', 104),
+    (405, 305, 'Brave New World', '2022-04-05', 105),
+    (406, 306, 'The Lord of the Rings', '2022-04-20', 106),
+    (407, 307, 'Pride and Prejudice', '2021-10-25', 107),
+    (408, 308, 'The Hobbit', '2022-05-10', 108),
+    (409, 309, 'To the Lighthouse', '2021-09-30', 109),
+    (410, 310, 'Moby-Dick', '2022-06-15', 110);
+    
+INSERT INTO returnstatus (Return_id, Return_cust, Return_book_name, Return_date, Isbn_book_2)
+VALUES
+    (501, 301, 'The Great Gatsby', '2022-02-15', 101),
+    (502, 302, 'To Kill a Mockingbird', '2022-02-10', 102),
+    (503, 303, '1984', '2022-03-25', 103),
+    (504, 304, 'The Catcher in the Rye', '2022-01-01', 104),
+    (505, 305, 'Brave New World', '2022-04-20', 105),
+    (506, 306, 'The Lord of the Rings', '2022-05-05', 106),
+    (507, 307, 'Pride and Prejudice', '2021-11-10', 107),
+    (508, 308, 'The Hobbit', '2022-05-25', 108),
+    (509, 309, 'To the Lighthouse', '2021-10-15', 109),
+    (510, 310, 'Moby-Dick', '2022-06-30', 110);
+    
+-- Retrieve the book title, category, and rental price of all available books
+SELECT BOOK_TITLE, CATEGORY, RENTAL_PRICE FROM BOOKS WHERE status='yes';
+
+-- List the employee names and their respective salaries in descending order of salary
+SELECT EMP_NAME , SALARY FROM EMPLOYEE ORDER BY SALARY DESC;
+
+-- Retrieve the book titles and the corresponding customers who have issued those books.
+SELECT B.BOOK_TITLE , C.CUSTOMER_NAME
+FROM BOOKS B JOIN ISSUESTATUS I ON B.ISBN=I.ISBN_BOOK
+JOIN CUSTOMER C ON I.ISSUED_CUS=C.CUSTOMER_ID;
+
+-- Display the total count of books in each category.
+SELECT CATEGORY, COUNT(*) AS total_books FROM BOOKS GROUP BY CATEGORY;
+
+-- Retrieve the employee names and their positions for the employees whose salaries are above Rs.50,000.
+SELECT EMP_NAME , POSITION FROM EMPLOYEE WHERE SALARY >50000;
+
+-- List the customer names who registered before 2022-01-01 and have not issued any books yet
+SELECT CUSTOMER_NAME FROM CUSTOMER WHERE REG_DATE < '2022-01-01'
+AND CUSTOMER_ID NOT IN (SELECT ISSUED_CUS FROM ISSUESTATUS);
+
+-- Display the branch numbers and the total count of employees in each branch
+SELECT BRANCH_NO , COUNT(*) AS EMP_COUNT FROM EMPLOYEE GROUP BY BRANCH_NO;
+
+-- DISPLAY THE NAMES OF CUSTOMERS WHO HAVE ISSUED BOOKS IN THE MONTH OF JUNE 2023.
+SELECT DISTINCT C.CUSTOMER_NAME FROM CUSTOMER C JOIN ISSUESTATUS I
+ON C.CUSTOMER_ID = I.ISSUED_CUS
+WHERE MONTH(I.ISSUED_DATE)=6 AND YEAR(I.ISSUED_DATE) =2023;
+
+-- RETRIEVE BOOK_TITLE FROM BOOK TABLE CONTAINING HISTORY
+SELECT BOOK_TITLE FROM BOOKS WHERE CATEGORY='HISTORY';
+
+# Retrieve the branch numbers along with the count of employees for branches having more than 5 employees.
+SELECT BRANCH_NO , COUNT(*) AS EMP_COUNT FROM EMPLOYEE GROUP BY BRANCH_NO HAVING COUNT(*)>5;
+
+
+
+
